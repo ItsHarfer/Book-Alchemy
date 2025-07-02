@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import os
 
 from data_models import db, Author, Book
@@ -80,6 +80,27 @@ def add_book():
         db.session.commit()
         message = "Book added successfully!"
     return render_template("add_book.html", authors=authors, message=message)
+
+
+@app.route("/book/<int:book_id>/delete", methods=["POST"])
+def delete_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    author = book.author
+
+    db.session.delete(book)
+    db.session.commit()
+
+    message = f"✅ Book '{book.title}' was successfully deleted."
+
+    # Check if the author has other books in the database, if not, delete it
+    remaining_books = Book.query.filter_by(author_id=author.id).count()
+    if remaining_books == 0:
+        db.session.delete(author)
+        db.session.commit()
+        message += f" Author '{author.name}' was also removed from the library."
+
+    # Redirect back to home
+    return redirect(url_for("home", message=message))
 
 
 if __name__ == "__main__":

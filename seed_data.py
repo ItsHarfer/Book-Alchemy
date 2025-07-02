@@ -6,57 +6,92 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    # Autoren mit echten date-Objekten
+    # Add authors
     authors = [
-        Author(
-            name="Jane Austen",
-            birth_date=date(1775, 12, 16),
-            date_of_death=date(1817, 7, 18),
-        ),
-        Author(
-            name="George Orwell",
-            birth_date=date(1903, 6, 25),
-            date_of_death=date(1950, 1, 21),
-        ),
-        Author(name="J.K. Rowling", birth_date=date(1965, 7, 31), date_of_death=None),
-        Author(
-            name="F. Scott Fitzgerald",
-            birth_date=date(1896, 9, 24),
-            date_of_death=date(1940, 12, 21),
-        ),
-        Author(
-            name="Toni Morrison",
-            birth_date=date(1931, 2, 18),
-            date_of_death=date(2019, 8, 5),
-        ),
+        Author(name="J.K. Rowling", birth_date=date(1965, 7, 31)),
+        Author(name="George R. R. Martin", birth_date=date(1948, 9, 20)),
     ]
     db.session.add_all(authors)
     db.session.commit()
 
-    # Books to add
+    # Add books
     books = [
-        Book(
-            isbn="9780141439518",
-            title="Pride and Prejudice",
-            publication_year=1813,
-            author_id=1,
-        ),
-        Book(isbn="9780451524935", title="1984", publication_year=1949, author_id=2),
+        # Harry Potter Series
         Book(
             isbn="9780439554930",
             title="Harry Potter and the Sorcerer's Stone",
             publication_year=1997,
-            author_id=3,
+            author_id=1,
         ),
         Book(
-            isbn="9780743273565",
-            title="The Great Gatsby",
-            publication_year=1925,
-            author_id=4,
+            isbn="9780439064873",
+            title="Harry Potter and the Chamber of Secrets",
+            publication_year=1998,
+            author_id=1,
         ),
-        Book(isbn="9781400033416", title="Beloved", publication_year=1987, author_id=5),
+        Book(
+            isbn="9780439136365",
+            title="Harry Potter and the Prisoner of Azkaban",
+            publication_year=1999,
+            author_id=1,
+        ),
+        Book(
+            isbn="9780439139601",
+            title="Harry Potter and the Goblet of Fire",
+            publication_year=2000,
+            author_id=1,
+        ),
+        Book(
+            isbn="9780439358071",
+            title="Harry Potter and the Order of the Phoenix",
+            publication_year=2003,
+            author_id=1,
+        ),
+        Book(
+            isbn="9780439785969",
+            title="Harry Potter and the Half-Blood Prince",
+            publication_year=2005,
+            author_id=1,
+        ),
+        Book(
+            isbn="9780545010221",
+            title="Harry Potter and the Deathly Hallows",
+            publication_year=2007,
+            author_id=1,
+        ),
+        # A Song of Ice and Fire Series
+        Book(
+            isbn="9780553103540",
+            title="A Game of Thrones",
+            publication_year=1996,
+            author_id=2,
+        ),
+        Book(
+            isbn="9780553108033",
+            title="A Clash of Kings",
+            publication_year=1998,
+            author_id=2,
+        ),
+        Book(
+            isbn="9780553106633",
+            title="A Storm of Swords",
+            publication_year=2000,
+            author_id=2,
+        ),
+        Book(
+            isbn="9780553801477",
+            title="A Feast for Crows",
+            publication_year=2005,
+            author_id=2,
+        ),
+        Book(
+            isbn="9780553801507",
+            title="A Dance with Dragons",
+            publication_year=2011,
+            author_id=2,
+        ),
     ]
     db.session.add_all(books)
     db.session.commit()
 
-    print("📚 Data successfully added to the database.")
+    print("📚 Books successfully added to the database.")
