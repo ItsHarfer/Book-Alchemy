@@ -1,37 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add Author - My Book Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Add Author</title>
-  </head>
-  <body>
+</head>
+<body>
+    <div class="container">
+        <div class="section-header">
+            <h1>✍️ Add an Author</h1>
+            <p>Add a new author to your library collection.</p>
+        </div>
 
-  <h1>Add an Author</h1>
+        <div class="form-container">
+            <p class="form-description">
+                Fill in the author's information below. All fields marked with an asterisk (*) are required.
+            </p>
 
-  <form action="/add_author" method="POST">
-    <label for="name">Author Name:</label>
-    <input type="text" id="name" name="name" required><br><br>
+            <form action="/add_author" method="POST">
+                <div class="form-group">
+                    <label for="name">Author Name *</label>
+                    <input type="text" id="name" name="name" placeholder="Enter the author's full name" required>
+                </div>
 
-    <label for="birthdate">Birthdate:</label>
-    <input type="date" id="birthdate" name="birth_date" required><br><br>
+                <div class="form-group">
+                    <label for="birthdate">Birth Date *</label>
+                    <input type="date" id="birthdate" name="birth_date" required>
+                </div>
 
-    <label for="date_of_death">Date of Death:</label>
-    <input type="date" id="date_of_death" name="date_of_death"><br><br>
+                <div class="form-group">
+                    <label for="date_of_death">Date of Death</label>
+                    <input type="date" id="date_of_death" name="date_of_death">
+                    <div class="field-hint">Leave empty if the author is still alive</div>
+                </div>
 
-    <input type="submit" value="Add Author">
-  </form>
+                <button type="submit" class="btn btn-full">Add Author</button>
+            </form>
+        </div>
 
-  <!-- Back to home -->
-  <p>
-    <a href="/" class="button">← Back to Home</a>
-  </p>
+        {% if message %}
+        <div class="message">
+            {{ message }}
+        </div>
+        {% endif %}
 
-  {% if message %}
-    <p>{{ message }}</p>
-  {% endif %}
-
-  </body>
+        <div class="navigation">
+            <a href="/" class="btn btn-secondary">← Back to Library</a>
+            <a href="/add_book" class="btn">Add Book →</a>
+        </div>
+    </div>
+</body>
 </html>
