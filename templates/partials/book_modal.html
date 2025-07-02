@@ -1,0 +1,13 @@
+<div class="book-modal">
+  <div class="book-info">
+    <h2>{{ book.title }}</h2>
+    <div class="book-meta">
+      <div><strong>Author:</strong> {{ book.author.name }}</div>
+      <div><strong>Year:</strong> {{ book.publication_year }}</div>
+      <div><strong>ISBN:</strong> {{ book.isbn }}</div>
+    </div>
+  </div>
+  <div class="book-cover">
+    <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg" alt="Cover of {{ book.title }}">
+  </div>
+</div>

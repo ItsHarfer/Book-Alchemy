@@ -1,0 +1,10 @@
+<h1>{{ book.title }}</h1>
+<p><strong>ISBN:</strong> {{ book.isbn }}</p>
+<p><strong>Year:</strong> {{ book.publication_year }}</p>
+<p><strong>Author:</strong>
+   <a href="{{ url_for('author_detail', author_id=book.author.id) }}">
+       {{ book.author.name }}
+   </a>
+</p>
+<img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg" alt="Cover">
+<a href="{{ url_for('home') }}">← Back to Home</a>
