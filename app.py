@@ -17,18 +17,28 @@ with app.app_context():
     db.create_all()
 
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
-    sort = request.args.get("sort", "title")  # Default = 'title'
+    search_query = request.args.get("search")
+    sort_param = request.args.get("sort")
 
-    if sort == "title":
-        books = Book.query.order_by(Book.title).all()
-    elif sort == "author":
-        books = db.session.query(Book).join(Author).order_by(Author.name).all()
+    if search_query:
+        books = Book.query.filter(Book.title.ilike(f"%{search_query}%")).all()
+        message = (
+            f"Results for '{search_query}'"
+            if books
+            else f"No books found for '{search_query}'."
+        )
     else:
-        books = Book.query.all()
+        if sort_param == "title":
+            books = Book.query.order_by(Book.title).all()
+        elif sort_param == "author":
+            books = Book.query.join(Author).order_by(Author.name).all()
+        else:
+            books = Book.query.all()
+        message = None
 
-    return render_template("home.html", books=books)
+    return render_template("home.html", books=books, message=message)
 
 
 @app.route("/add_author", methods=["GET", "POST"])

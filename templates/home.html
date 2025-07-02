@@ -22,6 +22,15 @@
       <a href="/add_book" class="button">➕ Add Book</a>
     </div>
 
+    <form method="GET" action="/">
+      <label> Search by:
+        <input type="text" name="search" placeholder="Search books by title..." required>
+      </label>
+      <input type="submit" value="Search">
+    </form>
+    {% if message %}
+      <p><em>{{ message }}</em></p>
+    {% endif %}
     <hr>
 
     {% for book in books %}
