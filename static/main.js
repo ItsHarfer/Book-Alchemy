@@ -26,3 +26,16 @@ function openAuthorDetail(authorId) {
       overlay.style.display = "flex";
     });
 }
+
+document.querySelectorAll(".rating-select").forEach(sel => {
+  sel.addEventListener("change", async e => {
+    const bookId = e.target.id.split("-")[1];
+    const rating = e.target.value;
+    const resp = await fetch(`/book/${bookId}/rate`, {
+      method: "POST",
+      headers: {"Content-Type":"application/x-www-form-urlencoded"},
+      body: `rating=${rating}`
+    });
+    if (!resp.ok) alert("Fehler beim Speichern");
+  });
+});
