@@ -1,0 +1,25 @@
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  margin: 5px;
+  font-size: 14px;
+  background-color: #007BFF;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+/* Back to Home link */
+.back-link {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #eee;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  color: black;
+  margin-top: 20px;
+}

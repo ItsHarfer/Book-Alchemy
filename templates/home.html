@@ -4,12 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Library</title>
   </head>
   <body>
 
-    {% for book in books %}
-    <div> <h3>{{ book.title }}</h3>
+    <h1>📚 My Book Library</h1>
+
+    <div>
+      <strong>Sort by:</strong>
+      <a href="/?sort=title">Title</a> |
+      <a href="/?sort=author">Author</a>
     </div>
+
+    <div style="margin-top: 10px;">
+      <a href="/add_author" class="button">➕ Add Author</a>
+      <a href="/add_book" class="button">➕ Add Book</a>
+    </div>
+
+    <hr>
+
+    {% for book in books %}
+      <div>
+        <h3>{{ book.title }}</h3>
+        <p><strong>Author:</strong> {{ book.author.name }}</p>
+        <p><strong>Published:</strong> {{ book.publication_year }}</p>
+        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Book cover">
+        <hr>
+      </div>
     {% endfor %}
 
   </body>
