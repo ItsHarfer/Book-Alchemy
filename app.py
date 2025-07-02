@@ -68,11 +68,13 @@ def add_book():
     if request.method == "POST":
         isbn = request.form["isbn"]
         title = request.form["title"]
+        short_description = request.form["short_description"]
         publication_year = request.form["publication_year"]
         author_id = request.form["author_id"]
         new_book = Book(
             isbn=isbn,
             title=title,
+            short_description=short_description,
             publication_year=publication_year,
             author_id=author_id,
         )
@@ -101,6 +103,22 @@ def delete_book(book_id):
 
     # Redirect back to home
     return redirect(url_for("home", message=message))
+
+
+@app.route("/book/<int:book_id>")
+def book_detail(book_id):
+    book = Book.query.get_or_404(book_id)
+    if request.args.get("modal") == "true":
+        return render_template("partials/book_modal.html", book=book)
+    return render_template("book_detail.html", book=book)
+
+
+@app.route("/author/<int:author_id>")
+def author_detail(author_id):
+    author = Author.query.get_or_404(author_id)
+    if request.args.get("modal") == "true":
+        return render_template("partials/author_modal.html", author=author)
+    return render_template("author_detail.html", author=author)
 
 
 if __name__ == "__main__":

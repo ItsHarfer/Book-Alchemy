@@ -1,0 +1,20 @@
+<h2>{{ author.name }}</h2>
+<p><strong>Born:</strong> {{ author.birth_date }}</p>
+{% if author.date_of_death %}
+<p><strong>Died:</strong> {{ author.date_of_death }}</p>
+{% else %}
+<p><strong>Status:</strong> Still alive</p>
+{% endif %}
+
+<h3>📚 Books by {{ author.name }}</h3>
+<ul>
+  {% for book in author.books %}
+    <li>
+      <a href="#" onclick="openBookDetail({{ book.id }}); return false;">
+        {{ book.title }}
+      </a>
+    </li>
+  {% else %}
+    <li><em>No books found.</em></li>
+  {% endfor %}
+</ul>
