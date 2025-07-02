@@ -5,6 +5,16 @@ import os
 
 from data_models import db, Author, Book
 
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
+
+
+@event.listens_for(Engine, "connect")
+def _enable_sqlite_fk(dbapi_con, con_record):
+    # aktiviert PRAGMA foreign_keys=ON für SQLite
+    dbapi_con.execute("PRAGMA foreign_keys=ON")
+
+
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = (
@@ -119,6 +129,17 @@ def author_detail(author_id):
     if request.args.get("modal") == "true":
         return render_template("partials/author_modal.html", author=author)
     return render_template("author_detail.html", author=author)
+
+
+@app.route("/author/<int:author_id>/delete", methods=["POST"])
+def delete_author(author_id):
+    author = Author.query.get_or_404(author_id)
+
+    db.session.delete(author)
+    db.session.commit()
+
+    message = f"✅ Author '{author.name}' and all associated books were deleted."
+    return redirect(url_for("home", message=message))
 
 
 if __name__ == "__main__":

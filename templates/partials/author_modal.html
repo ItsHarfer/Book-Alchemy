@@ -18,3 +18,6 @@
     <li><em>No books found.</em></li>
   {% endfor %}
 </ul>
+ <form method="POST" action="{{ url_for('delete_author', author_id=author.id) }}" onsubmit="return confirm('Are you sure you want to delete this author and all their books?');">
+  <button type="submit" class="delete-button">🗑 Delete Author</button>
+ </form>
