@@ -53,6 +53,9 @@ class Book(db.Model):
     author_id = db.Column(
         db.Integer, db.ForeignKey("authors.id", ondelete="SET NULL"), nullable=True
     )
+    rating = db.Column(db.Integer, nullable=True)
+
+    # Connection to Author
     author = db.relationship(
         "Author",
         backref=backref(

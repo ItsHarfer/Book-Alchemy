@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import os
 
 from data_models import db, Author, Book
@@ -141,6 +141,13 @@ def delete_author(author_id):
     message = f"✅ Author '{author.name}' and all associated books were deleted."
     return redirect(url_for("home", message=message))
 
+@app.route("/book/<int:id>/rate", methods=["POST"])
+def rate_book(id):
+    new_rating = int(request.form["rating"])
+    book = Book.query.get_or_404(id)
+    book.rating = new_rating
+    db.session.commit()
+    return jsonify({"success": True, "rating": book.rating})
 
 if __name__ == "__main__":
     app.run(debug=True)
