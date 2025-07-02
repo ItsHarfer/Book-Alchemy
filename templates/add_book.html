@@ -1,43 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add Book - My Book Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Add Book</title>
-  </head>
-  <body>
+</head>
+<body>
+    <div class="container">
+        <div class="section-header">
+            <h1>📚 Add a Book</h1>
+            <p>Add a new book to your library collection.</p>
+        </div>
 
-  <h1>Add a Book</h1>
-  <form action="/add_book" method="POST">
-    <label for="isbn">ISBN:</label>
-    <input type="text" id="isbn" name="isbn" required><br><br>
+        <div class="form-container">
+            <p class="form-description">
+                Fill in the book's information below. Make sure to select the correct author from the dropdown list.
+            </p>
 
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" required><br><br>
+            {% if not authors %}
+            <div class="warning">
+                ⚠️ No authors available! Please add an author first before adding books.
+            </div>
+            {% else %}
+            <form action="/add_book" method="POST">
+                <div class="form-group">
+                    <label for="isbn">ISBN</label>
+                    <input type="text" id="isbn" name="isbn" placeholder="Enter the book's ISBN" required>
+                    <div class="field-hint">The ISBN is used to fetch the book cover image</div>
+                </div>
 
-    <label for="publication_year">Publication Year:</label>
-    <input type="number" id="publication_year" name="publication_year" required><br><br>
+                <div class="form-group">
+                    <label for="title">Book Title</label>
+                    <input type="text" id="title" name="title" placeholder="Enter the book's title" required>
+                </div>
 
-    <label for="author_id">Author:</label>
-    <select id="author_id" name="author_id" required>
-      {% for author in authors %}
-      <option value="{{ author.id }}">{{ author.name }}</option>
-      {% endfor %}
-    </select><br><br>
+                <div class="form-group">
+                    <label for="publication_year">Publication Year</label>
+                    <input type="number" id="publication_year" name="publication_year" placeholder="e.g., 2023" min="1000" max="2030" required>
+                </div>
 
-    <input type="submit" value="Add Book">
-  </form>
+                <div class="form-group">
+                    <label for="author_id">Author</label>
+                    <select id="author_id" name="author_id" required>
+                        <option value="">Select an author...</option>
+                        {% for author in authors %}
+                        <option value="{{ author.id }}">{{ author.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-  <!-- Back to home -->
-  <p>
-    <a href="/" class="button">← Back to Home</a>
-  </p>
+                <button type="submit" class="btn btn-full">Add Book</button>
+            </form>
+            {% endif %}
+        </div>
 
-  {% if message %}
-    <p>{{ message }}</p>
-  {% endif %}
-
-  </body>
+        {% if message %}
+        <div class="message">
+            {{ message }}
+        </div>
+        {% endif %}
+    </div>
+</body>
 </html>

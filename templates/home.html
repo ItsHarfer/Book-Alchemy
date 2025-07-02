@@ -1,56 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Book Library</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Library</title>
-  </head>
-  <body>
+</head>
+<body>
+    <div class="container">
+        <div class="section-header">
+            <h1>📚 My Book Library</h1>
+            <p>Manage your personal book collection with style.</p>
+        </div>
 
-    <h1>📚 My Book Library</h1>
+        <div class="top-bar">
+            <div class="section-block">
+                <div class="section-header">
+                    <h2>🔍 Search Books</h2>
+                    <p class="section-description">Find books in your library by searching through titles.</p>
+                </div>
+                <form method="GET" action="/" class="input-field">
+                    <input type="text" name="search" placeholder="Search books by title..." required>
+                    <button type="submit" class="btn">Search</button>
+                </form>
+            </div>
 
-    <div>
-      <strong>Sort by:</strong>
-      <a href="/?sort=title">Title</a> |
-      <a href="/?sort=author">Author</a>
+            <div class="section-block">
+                <div class="section-header">
+                    <h2>📊 Sort Library</h2>
+                    <p class="section-description">Organize your books by title or author name.</p>
+                </div>
+                <div class="input-field">
+                    <a href="/?sort=title" class="btn">Sort by Title</a>
+                    <a href="/?sort=author" class="btn">Sort by Author</a>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <div class="section-header">
+                    <h2>➕ Add Content</h2>
+                    <p class="section-description">Add new authors and books to your library.</p>
+                </div>
+                <div class="input-field">
+                    <a href="/add_author" class="btn">Add Author</a>
+                    <a href="/add_book" class="btn">Add Book</a>
+                </div>
+            </div>
+        </div>
+
+        {% if message %}
+        <div class="message">
+            <em>{{ message }}</em>
+        </div>
+        {% endif %}
+
+        {% if request.args.get('message') %}
+        <div class="success-message">
+            {{ request.args.get('message') }}
+        </div>
+        {% endif %}
+
+        <div class="section">
+            <h2>📖 Your Books</h2>
+            <div class="books-grid">
+            {% for book in books %}
+                <div class="book">
+                <div class="book-cover">
+                    <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="{{ book.title }} cover" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDEyMCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTgwIiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik00MCA2MEg4MFY4MEg0MFY2MFoiIGZpbGw9IiNjY2MiLz4KPHN2ZyB4PSI0NSIgeT0iOTAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCI+CjxyZWN0IHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0iI2NjYyIvPgo8L3N2Zz4KPC9zdmc+'">
+                </div>
+                <div class="book-info">
+                    <h3>{{ book.title }}</h3>
+                    <div class="book-meta">
+                        <span><strong>Author:</strong> {{ book.author.name }}</span>
+                        <span><strong>Published:</strong> {{ book.publication_year }}</span>
+                        <span><strong>ISBN:</strong> {{ book.isbn }}</span>
+                    </div>
+                    <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this book?')">
+                            🗑 Delete Book
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
     </div>
-
-    <div style="margin-top: 10px;">
-      <a href="/add_author" class="button">➕ Add Author</a>
-      <a href="/add_book" class="button">➕ Add Book</a>
-    </div>
-
-    <form method="GET" action="/">
-      <label> Search by:
-        <input type="text" name="search" placeholder="Search books by title..." required>
-      </label>
-      <input type="submit" value="Search">
-    </form>
-    {% if message %}
-      <p><em>{{ message }}</em></p>
-    {% endif %}
-    <hr>
-
-    {% if request.args.get('message') %}
-      <p style="color: green;">{{ request.args.get('message') }}</p>
-    {% endif %}
-
-    {% for book in books %}
-      <div>
-        <h3>{{ book.title }}</h3>
-        <p><strong>Author:</strong> {{ book.author.name }}</p>
-        <p><strong>Published:</strong> {{ book.publication_year }}</p>
-        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Book cover">
-        <hr>
-        <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST" style="display:inline;">
-        <button type="submit" class="delete-button">
-          🗑 Delete Book
-        </button>
-      </form>
-      </div>
-    {% endfor %}
-
-  </body>
+</body>
 </html>
