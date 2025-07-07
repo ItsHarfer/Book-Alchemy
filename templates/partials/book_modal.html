@@ -1,13 +1,36 @@
 <div class="book-modal">
   <div class="book-info">
+    <div class="book-cover">
+      <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg" alt="Cover of {{ book.title }}">
+    </div>
     <h2>{{ book.title }}</h2>
     <div class="book-meta">
-      <div><strong>Author:</strong> {{ book.author.name }}</div>
-      <div><strong>Year:</strong> {{ book.publication_year }}</div>
-      <div><strong>ISBN:</strong> {{ book.isbn }}</div>
+      <div class="modal-book-card {% if book.is_read %}read{% endif %}">
+
+        <div><strong>Author:</strong> {{ book.author.name }}</div>
+        <div><strong>Year:</strong> {{ book.publication_year }}</div>
+        <div><strong>ISBN:</strong> {{ book.isbn }}</div>
+        <br>
+        <div><strong>Short description:</strong> {{ book.short_description }}</div>
+<br>
+        <div><strong>Rating:</strong>  {{ book.rating }}/10</div>
+        <div><strong>Reading status:</strong>
+          <input type="checkbox"
+                 disabled
+                 {% if book.is_read %}checked{% endif %}
+          >
+        </div>
+        <div class="reading-progress">
+          <label for="progress-{{ book.id }}">Reading progress:</label>
+          <progress id="progress-{{ book.id }}"
+                    value="{{ book.progress }}"
+                    max="100">
+            {{ book.progress }}%
+          </progress>
+          <span class="progress-value">{{ book.progress }}%</span>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="book-cover">
-    <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg" alt="Cover of {{ book.title }}">
+
   </div>
 </div>
