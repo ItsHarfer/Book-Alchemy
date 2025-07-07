@@ -199,13 +199,9 @@ body {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.26);
-    padding: 24px 20px;
+    padding: 24px 20px 3rem;
     position: relative;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 420px;
 }
 
 .book:hover {
@@ -260,11 +256,7 @@ body {
 .book-meta {
     font-size: 0.9rem;
     color: #666;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex-grow: 1;
+
 }
 
 .book-meta span {
@@ -284,12 +276,12 @@ body {
     border: none;
     padding: 10px 16px;
     border-radius: 8px;
+    margin: 0.5rem 0;
+    align-self: flex-start;
     cursor: pointer;
     font-weight: 600;
     font-size: 14px;
     transition: background-color 0.3s ease;
-    margin-top: auto;
-    align-self: center;
     min-width: 120px;
 }
 
@@ -297,6 +289,23 @@ body {
     background-color: #ff5252;
 }
 
+.edit-button {
+    background-color: #07a7fb;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    align-self: flex-start;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    min-width: 120px;
+}
+.edit-button:hover {
+    background-color: #24adfb;
+}
 /* Section styling */
 .section h2 {
     font-size: 1.5rem;
@@ -596,9 +605,8 @@ input[type="submit"]:hover {
 
 .modal-content {
     background: white;
-    padding: 2rem;
     border-radius: 12px;
-    max-width: 600px;
+    max-width: 800px;
     width: 90%;
     position: relative;
 }
@@ -627,8 +635,7 @@ input[type="submit"]:hover {
   }
 
   .book-meta {
-    display: flex;
-    flex-direction: column;
+
     gap: 0.3rem;
     font-size: 1rem;
     color: #333;
@@ -727,12 +734,265 @@ a:hover {
 }
 
 .rating {
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
+  gap: 3rem;
 }
 .rating-select {
   margin-left: 0.5rem;
   padding: 0.25rem;
   border-radius: 0.25rem;
+}
+
+.reading-status {
+  margin: 1rem 0 0.5rem;
+}
+.read-toggle {
+  transform: scale(1.2);
+  margin-right: 0.5rem;
+}
+
+.reading-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.progress-slider {
+  flex: 1;
+}
+.progress-value {
+  width: 3ch;
+  text-align: right;
+}
+
+.modal-book-card {
+  padding: 1rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: border-color 0.2s ease;
+}
+
+.modal-book-card.read {
+  border-color: #a3e635;
+}
+
+/* Reading Status */
+.reading-status {
+  margin-top: 1rem;
+}
+.reading-status input[disabled] {
+  transform: scale(1.2);
+  margin-right: 0.5rem;
+  cursor: default;
+}
+
+/* Progress-Bar */
+.reading-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1rem;
+}
+.reading-progress progress {
+  flex: 1;
+  height: 1rem;
+  appearance: none;
+}
+/* Optional: eigenes Styling für progress */
+.reading-progress progress::-webkit-progress-bar {
+  background-color: #e5e7eb;
+  border-radius: 0.25rem;
+}
+.reading-progress progress::-webkit-progress-value {
+  background-color: #3b82f6;
+  border-radius: 0.25rem;
+}
+.reading-progress .progress-value {
+  width: 3ch;
+  text-align: right;
+}
+.modal-content {
+  position: relative;
+  background: white;
+  border-radius: 0.5rem;
+  max-height: 90vh;
+  max-width: 600px;
+  width: 90%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5rem; right: 0.5rem;
+  background: none; border: none;
+  font-size: 1.5rem; cursor: pointer;
+}
+#modal-body {
+  padding: 1rem;
+  overflow-y: auto;
+  flex: 1;
+}
+/* Unified Modal Styling */
+.modal.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  border-radius: 0.5rem;
+  max-height: 90vh;
+  max-width: 600px;
+  width: 90%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 1002;
+}
+
+.book-modal {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.book-modal h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #222;
+}
+
+.book-modal label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+    width: 100%;
+}
+
+
+
+.book-modal input[type="text"],
+.book-modal select,
+.book-modal textarea {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background-color: #fff;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.book-modal input[type="text"]:focus,
+.book-modal select:focus,
+.book-modal textarea:focus {
+    outline: none;
+    border-color: #4466ee;
+    box-shadow: 0 4px 16px rgba(68,102,238,0.2);
+}
+
+.edit-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #3b82f6;
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: white;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.edit-icon:hover {
+  background: rgba(255,255,255,1);
+}
+
+.book {
+  position: relative;
+}
+
+/* Footer in der Card: Rating, Progress und Read-Check in einer Zeile */
+.card-footer {
+  position: absolute;
+  bottom: 1.2rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  /* Statt space-between: */
+  justify-content: space-evenly;
+  /* Und zusätzlich ein Gap: */
+  gap: 1.5rem;
+    margin: 0 20px;
+}
+
+.rating-display {
+  flex: 0 0 auto;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.card-progress {
+  flex: 1 1 auto;
+  height: 6px;
+  margin: 0 0.5rem;
+}
+
+.read-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #d1fae5;   /* helles Mintgrün */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: #57f35d;              /* sattes Grün für den Haken */
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Nicht gelesen: nur runder Rand, Haken unsichtbar */
+.read-check.inactive {
+  background-color: #fff;      /* weißer Kreis */
+  border: 2px solid #ddd;      /* grauer Rand */
+  color: transparent;          /* Haken drin, aber unsichtbar */
 }

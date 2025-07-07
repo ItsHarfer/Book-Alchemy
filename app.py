@@ -120,7 +120,7 @@ def book_detail(book_id):
     book = Book.query.get_or_404(book_id)
     if request.args.get("modal") == "true":
         return render_template("partials/book_modal.html", book=book)
-    return render_template("book_detail.html", book=book)
+    return render_template("home.html", book=book)
 
 
 @app.route("/author/<int:author_id>")
@@ -141,6 +141,7 @@ def delete_author(author_id):
     message = f"✅ Author '{author.name}' and all associated books were deleted."
     return redirect(url_for("home", message=message))
 
+
 @app.route("/book/<int:id>/rate", methods=["POST"])
 def rate_book(id):
     new_rating = int(request.form["rating"])
@@ -148,6 +149,36 @@ def rate_book(id):
     book.rating = new_rating
     db.session.commit()
     return jsonify({"success": True, "rating": book.rating})
+
+
+@app.route("/book/<int:id>/status", methods=["POST"])
+def update_status(id):
+    book = Book.query.get_or_404(id)
+    book.is_read = request.form.get("is_read") == "true"
+    book.progress = max(0, min(100, int(request.form.get("progress", 0))))
+    db.session.commit()
+    return jsonify(
+        {"success": True, "is_read": book.is_read, "progress": book.progress}
+    )
+
+
+@app.route("/book/<int:book_id>/edit", methods=["GET", "POST"])
+def edit_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    authors = Author.query.order_by(Author.name).all()
+
+    if request.method == "POST":
+        book.title = request.form["title"]
+        book.author_id = request.form["author_id"]
+        book.short_description = request.form["short_description"]
+        book.rating = int(request.form["rating"] or 0)
+        book.is_read = request.form.get("is_read") == "on"
+        book.progress = max(0, min(100, int(request.form.get("progress", 0))))
+        db.session.commit()
+        return jsonify({"success": True})
+
+    return render_template("partials/edit_book_modal.html", book=book, authors=authors)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

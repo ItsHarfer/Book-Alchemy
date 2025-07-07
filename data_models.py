@@ -55,6 +55,9 @@ class Book(db.Model):
     )
     rating = db.Column(db.Integer, nullable=True)
 
+    is_read = db.Column(db.Boolean, nullable=False, default=False)
+    progress = db.Column(db.Integer, nullable=False, default=0)
+
     # Connection to Author
     author = db.relationship(
         "Author",
