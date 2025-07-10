@@ -1,0 +1,162 @@
+/* 8. BUTTONS */
+.btn {
+    background-color: #4466ee;
+    color: white;
+    border: none;
+    padding: 14px 18px;
+    height: 50px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ececec;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    color: #ffffff;
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: white;
+    color: #333;
+    border: None;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: None;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    cursor: default;
+}
+
+.btn-danger {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-danger:hover {
+  background-color: #c9302c;
+}
+
+
+.btn-full {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.btn-small:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.edit-button {
+    background-color: #07a7fb;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    align-self: flex-start;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    min-width: 120px;
+}
+
+.edit-button:hover {
+    background-color: #24adfb;
+}
+
+.delete-button {
+    background: rgba(255, 212, 212, 0.55);
+    width: 2.5rem;
+    height: 2.5rem;
+    color: white;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.delete-button:hover {
+    background-color: #fb9e9e;
+}
+
+.edit-icon {
+    background: rgba(194, 216, 255, 0.57);
+    border: none;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: white;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.edit-icon:hover {
+    background: rgba(255, 255, 255, 1);
+}
+

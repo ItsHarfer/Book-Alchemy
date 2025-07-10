@@ -1,6 +1,6 @@
 from datetime import date
-from app import app
-from data_models import db, Author, Book
+from run import app
+from app.models import db, Author, Book
 
 with app.app_context():
     db.drop_all()

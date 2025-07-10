@@ -1,0 +1,26 @@
+.author-detail {
+  padding: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.author-header h2 {
+  margin-bottom: 0.5rem;
+}
+
+.author-dates {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.author-books h3 {
+  margin-top: 1rem;
+}
+
+
+.author-table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  box-shadow: 0 1px 0 0 #4466ee;
+}

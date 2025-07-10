@@ -1,0 +1,70 @@
+/* 7. FORM ELEMENTS */
+.form-container {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.section-block input,
+.section-block select {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    box-shadow: 0px 4px 15px rgba(68, 102, 238, 0.15);
+}
+
+.form-group input::placeholder {
+    color: #aaa;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-description {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.field-hint {
+    color: #888;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    font-style: italic;
+}

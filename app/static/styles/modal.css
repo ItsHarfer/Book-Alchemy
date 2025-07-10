@@ -1,0 +1,191 @@
+/* 11. MODAL COMPONENTS */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    border-radius: 0.5rem;
+    max-height: 90vh;
+    max-width: 600px;
+    width: 90%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    z-index: 1002;
+}
+
+.modal-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.book-modal {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.book-modal h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #222;
+}
+
+.book-modal label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.book-modal input[type="text"],
+.book-modal select,
+.book-modal textarea {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.book-modal input[type="text"]:focus,
+.book-modal select:focus,
+.book-modal textarea:focus {
+    outline: none;
+    border-color: #4466ee;
+    box-shadow: 0 4px 16px rgba(68, 102, 238, 0.2);
+}
+
+.modal-book-card {
+    padding: 1rem;
+    background: #fff;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.2s ease;
+}
+
+.modal-book-card.read {
+    border-color: #a3e635;
+}
+
+
+
+.modal-content {
+  margin: 1.5rem auto;
+  padding: 0;
+}
+
+
+#modal-body {
+  padding: 2rem;
+}
+
+
+/* Container padding inside the modal body */
+.authors-modal {
+
+}
+
+/* Wrap table for horizontal scroll on small screens */
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+/* Clean, zebra-striped table */
+.author-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.author-table thead {
+  background: #f5f5f5;
+}
+.author-table th,
+.author-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+.author-table tbody tr:nth-child(odd) {
+  background: #fafafa;
+}
+.author-table a {
+  color: #4466ee;
+  text-decoration: none;
+}
+.author-table a:hover {
+  text-decoration: underline;
+}
+
+/* Small delete button */
+.btn-sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+/* Footer layout */
+.authors-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem 1.5rem;
+  border-top: 1px solid #eee;
+}
+.authors-footer .btn {
+  white-space: nowrap;
+}
+
+/* Empty state */
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: #666;
+}
+.empty-state a {
+  color: #4466ee;
+}

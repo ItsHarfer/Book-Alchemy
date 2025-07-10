@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Alchemy</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Main stylesheet loaded from static folder -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body data-message="{{ message or request.args.get('message') }}">
+    <div class="container">
+        <!-- Header Section -->
+        <div class="icon-section">
+            <!-- Logo loaded from static assets -->
+            <img src="{{ url_for('static', filename='assets/Book-Alchemy_Logo.png') }}" height="150" width="150" alt="Book Alchemy Logo"/>
+            <div class="section-header">
+                <h1>Book Alchemy</h1>
+                <p class="section-description">
+                    Your elegant personal library manager that helps you catalog, rate,
+                    and revisit your favorite reads with ease. Unlock AI-powered
+                    insights and tailored recommendations.
+                </p>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Top Bar: Search/Sort and Add Content -->
+        <div class="top-bar">
+            <!-- Search & Sort Section -->
+            <div class="section-block">
+                <div class="section-header">
+                    <h2>🔍 Search & Sort Books</h2>
+                    <p class="section-description">
+                        Find books or sort your library by title or author.
+                    </p>
+                </div>
+
+                <div class="input-field">
+                    <!-- Updated to use url_for for correct route -->
+                    <form method="GET" action="{{ url_for('home.home') }}" class="input-field">
+  <!-- Book Title (now optional) -->
+  <label>Book Title
+    <input
+      type="text"
+      name="search"
+      placeholder="Search books by title…">
+  </label>
+
+  <!-- Author dropdown -->
+  <label>Author
+    <select name="author_id" class="form-control">
+      <option value="" {% if not selected_author %}selected{% endif %}>
+        All Authors
+      </option>
+      {% for author in authors %}
+        <option value="{{ author.id }}"
+                {% if author.id == selected_author %}selected{% endif %}>
+          {{ author.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <button type="submit" class="btn btn-primary">🔍 Search</button>
+</form>
+
+
+                    <div class="sort-buttons">
+                        <!-- Sort links point to home route with query parameter -->
+                        <a href="{{ url_for('home.home', sort='title') }}" class="btn btn-secondary">
+                            Sort by Title
+                        </a>
+                        <a href="{{ url_for('home.home', sort='author') }}" class="btn btn-secondary">
+                            Sort by Author
+                        </a>
+                        <a href="{{ url_for('home.home') }}" class="btn btn-secondary">
+                            Show all books
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Content Section -->
+            <div class="section-block">
+                <div class="section-header">
+                    <h2>➕ Add Content</h2>
+                    <p class="section-description">
+                        Add new authors and books to your library.
+                    </p>
+                </div>
+
+                <div class="input-field">
+                    <div class="add-buttons">
+                      <button
+                        type="button"
+                        class="btn btn-primary js-open-add-author"
+                        data-url="{{ url_for('authors.add_author', modal='true') }}">
+                        🙋 Add Author
+                      </button>
+
+                      <button
+                        type="button"
+                        class="btn btn-primary js-open-add-book"
+                        data-url="{{ url_for('books.add_book', modal='true') }}">
+                        📗 Add Book
+                      </button>
+                    </div><button
+                        type="button"
+                        class="btn btn-primary js-open-add-author"
+                        data-url="{{ url_for('authors.list_authors', modal='true') }}">
+                        👥 All Authors
+                      </button>
+
+                    <div class="section-header">
+                        <hr>
+                        <h2>🤖 AI Features</h2>
+                        <p class="section-description">
+                            Enhance your reading experience with AI recommendations.
+                        </p>
+                    </div>
+
+                    <a href="{{ url_for('recommend.show_recommend_form') }}" class="btn btn-primary">
+                        ✨ Use AI Features
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Books Section -->
+        <div class="section">
+            <h2>📖 Your Books</h2>
+            <p class="section-description">
+                Here's a list of all your books. Click a title or author to view details.
+            </p>
+            <div class="books-grid">
+                {% for book in books %}
+                <div class="book">
+                    <div class="book-cover">
+                        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                             alt="{{ book.title }} cover">
+                    </div>
+
+                    <div class="book-info">
+                        <h3>
+                            <!-- Book title triggers modal fetch -->
+                            <a href="#" class="book-title" data-book-id="{{ book.id }}">
+                                {{ book.title }}
+                            </a>
+                        </h3>
+                        <p class="book-author-line">
+                            by
+                            <!-- Author link triggers modal fetch -->
+                            <a href="#" class="author-link" data-author-id="{{ book.author.id }}">
+                                {{ book.author.name }}
+                            </a>
+                        </p>
+
+                        {% if book.short_description %}
+                        <p class="book-description">
+                            {{ book.short_description }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="rating-display">⭐️ {{ book.rating }} / 10</div>
+                         <progress class="card-progress" value="{{ book.progress }}" max="100"></progress>
+                        <div class="book-header">
+                            <!-- Edit and delete buttons use data attributes -->
+                            <button class="btn edit-icon" type="button" data-book-id="{{ book.id }}"
+                                    aria-label="Edit">✏️</button>
+                            <button class="btn delete-button" type="button" data-book-id="{{ book.id }}"
+                                    aria-label="Delete">❌</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal Definition -->
+    <div id="editModal" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close">×</button>
+            <div id="modal-body">
+                <div class="spinner">Loading…</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Main JS loaded from static folder -->
+    <script type="module" src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+
+<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+<div class="modal-header">
+  <h2>Authors</h2>
+  <button class="modal-close" aria-label="Close">×</button>
+</div>
+
+<div class="modal-body authors-modal">
+  <p class="section-description">
+    Manage your library authors. Click a name to view details or delete an author.
+  </p>
+
+  {% if authors %}
+  <div class="table-wrapper">
+    <table class="author-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Born</th>
+          <th>Died</th>
+          <th># Books</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for author in authors %}
+        <tr>
+          <td>
+            <a href="#" class="author-link" data-author-id="{{ author.id }}">
+              {{ author.name }}
+            </a>
+          </td>
+          <td>
+            {% if author.birth_date %}
+              {{ author.birth_date.strftime('%Y-%m-%d') }}
+            {% else %}
+              –
+            {% endif %}
+          </td>
+          <td>
+
+            {{ author.date_of_death.strftime('%Y-%m-%d') if author.date_of_death else '–' }}
+          </td>
+          <td>{{ author.books|length }}</td>
+          <td>
+            <form
+              method="POST"
+              action="{{ url_for('authors.delete_author', author_id=author.id) }}"
+              onsubmit="return confirm('Delete {{ author.name }} and all their books?');"
+              style="display:inline">
+              <button type="submit" class="btn delete-button">
+                ❌
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty-state">
+    No authors found. <a href="#" class="js-open-add-author" data-url="{{ url_for('authors.add_author', modal='true') }}">Add one now</a>.
+  </p>
+  {% endif %}
+</div>
+
+<div class="modal-footer authors-footer">
+
+  <a href="{{ url_for('home.home') }}" class="btn btn-secondary">
+    ← Back to Library
+  </a>
+</div>

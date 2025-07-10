@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Book – My Book Library</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+  <div class="book-container">
+    <div class="section-header">
+      <h1>📚 Add a Book</h1>
+      <p>Add a new book to your library collection.</p>
+    </div>
+
+    <div class="form-container">
+      <p class="form-description">
+        Fill in the book’s information below. Make sure to select the correct author from the dropdown list.
+      </p>
+
+      {% if not authors %}
+      <div class="warning">
+        ⚠️ No authors available! Please add an author first before adding books.
+      </div>
+      {% else %}
+      <!--
+        Use url_for to target the books blueprint’s add_book route (/books/add)
+      -->
+      <form
+        action="{{ url_for('books.add_book') }}"
+        method="POST">
+        <div class="form-group">
+          <label for="isbn">ISBN</label>
+          <input
+            type="text"
+            id="isbn"
+            name="isbn"
+            placeholder="Enter the book’s ISBN"
+            required>
+          <div class="field-hint">
+            The ISBN is used to fetch the book cover image
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="title">Book Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Enter the book’s title"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="short_description">Short Description</label>
+          <textarea
+            id="short_description"
+            name="short_description"
+            rows="4"
+            placeholder="Enter a one-sentence summary of the book…"
+            required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="publication_year">Publication Year</label>
+          <input
+            type="number"
+            id="publication_year"
+            name="publication_year"
+            placeholder="e.g., 2023"
+            min="1000"
+            max="2030"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="author_id">Author</label>
+          <select
+            id="author_id"
+            name="author_id"
+            required>
+            <option value="" disabled selected>
+              Select an author…
+            </option>
+            {% for author in authors %}
+            <option value="{{ author.id }}">{{ author.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="button-footer">
+          <button
+            type="submit"
+            class="btn btn-full btn-primary">
+            📗 Add Book
+          </button>
+        </div>
+      </form>
+
+      <!--
+        Fallback link for users without JS: back to the main library
+      -->
+      <a
+        href="{{ url_for('home.home') }}"
+        class="btn btn-secondary">
+        ← Back to Library
+      </a>
+      {% endif %}
+    </div>
+
+    {% if message %}
+    <div class="message">
+      {{ message }}
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
