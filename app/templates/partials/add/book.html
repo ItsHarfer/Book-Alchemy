@@ -1,4 +1,24 @@
-<!-- app/templates/partials/add_book_modal.html -->
+<!--
+  app / templates / partials / add / book.html
+
+  Purpose:
+  Modal form for adding a new book to the library. Provides structured inputs for ISBN,
+  title, description, publication year, and author selection.
+
+  Features:
+  - Client-side validation for required fields and value constraints
+  - JavaScript-enhanced feedback for description length, year, and ISBN validity
+  - Dynamic author list rendering via Jinja2 template logic
+  - Conditional error message display for server-side feedback
+
+  Dependencies:
+  - JS: Validation and enabling/disabling submit button (#add-book-submit)
+  - Flask route: books.add_book
+  - CSS: form-control, alert, modal-close, validation-feedback
+
+  Author: Martin Haferanke
+  Date: 2025-07-10
+-->
 
 <form id="add-book-form"
       method="POST"
@@ -6,7 +26,7 @@
       novalidate>
   <div class="modal-header">
     <h3>📖 Add New Book</h3>
-    <button type="button" class="modal-close" aria-label="Close">×</button>
+    <button type="button" class="modal-close" aria-label="Close">&times;</button>
   </div>
 
   <div class="modal-body">
@@ -74,6 +94,7 @@
       </select>
     </div>
 
+    <!-- Conditional server-side error message -->
     {% if message %}
     <div class="alert alert-danger">{{ message }}</div>
     {% endif %}

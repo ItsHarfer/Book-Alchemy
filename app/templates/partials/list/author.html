@@ -1,8 +1,27 @@
+<!--
+  app / templates / partials / list / author.html
+
+  Purpose:
+  Modal for viewing, navigating, and managing existing authors in the user's library.
+  Includes tabular author data, delete functionality with confirmation, and link integration.
+
+  Features:
+  - List authors with birth/death dates and associated book count
+  - Interactive name links for detailed author views
+  - Delete author including all associated books with confirmation dialog
+  - Link to add new author if none exist
+  - Responsive table with accessible structure
+
+  Dependencies:
+  - JS listeners for author-link clicks (loaded externally)
+  - Flask endpoint: authors.delete_author
+  - CSS: author-table, modal, buttons
+-->
 
 <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 <div class="modal-header">
   <h2>Authors</h2>
-  <button class="modal-close" aria-label="Close">×</button>
+  <button class="modal-close" aria-label="Close">&times;</button>
 </div>
 
 <div class="modal-body authors-modal">
@@ -26,6 +45,7 @@
         {% for author in authors %}
         <tr>
           <td>
+            <!-- Clickable author name to open modal with author details -->
             <a href="#" class="author-link" data-author-id="{{ author.id }}">
               {{ author.name }}
             </a>
@@ -34,15 +54,15 @@
             {% if author.birth_date %}
               {{ author.birth_date.strftime('%Y-%m-%d') }}
             {% else %}
-              –
+              &ndash;
             {% endif %}
           </td>
           <td>
-
-            {{ author.date_of_death.strftime('%Y-%m-%d') if author.date_of_death else '–' }}
+            {{ author.date_of_death.strftime('%Y-%m-%d') if author.date_of_death else "&ndash;"|safe }}
           </td>
           <td>{{ author.books|length }}</td>
           <td>
+            <!-- Deletion form with confirmation prompt -->
             <form
               method="POST"
               action="{{ url_for('authors.delete_author', author_id=author.id) }}"
@@ -66,7 +86,6 @@
 </div>
 
 <div class="modal-footer authors-footer">
-
   <a href="{{ url_for('home.home') }}" class="btn btn-secondary">
     ← Back to Library
   </a>

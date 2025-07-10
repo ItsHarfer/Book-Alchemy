@@ -1,3 +1,20 @@
+<!--
+  app / templates / partials / edit_book_modal.html
+
+  Purpose:
+  Displays an editable modal form for updating an existing book.
+
+  Features:
+  - Pre-filled fields for title, author, rating, description, and progress
+  - Author list pre-selected according to current author
+  - JavaScript-enhanced progress slider with live label updates
+  - Save and cancel button handling
+
+  Dependencies:
+  - `book` and `authors` must be provided by the Flask route
+  - CSS classes: .book-modal, .btn, .nav-buttons
+  - JS: live update logic for reading progress
+-->
 <form id="edit-book-form" class="book-modal">
   <h2>Edit book</h2>
 

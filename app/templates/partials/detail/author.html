@@ -1,0 +1,74 @@
+<!--
+  app / templates / partials / detail / author.html
+
+  Purpose:
+  Displays detailed information about a selected author inside a modal dialog.
+  Includes name, birth/death dates, and a list of authored books.
+  Provides delete functionality with confirmation.
+
+  Features:
+  - Conditional rendering of birth and death dates
+  - Direct navigation to book detail page via book link
+  - Delete option with safety prompt
+
+  Dependencies:
+  - Flask route: authors.delete_author, books.book_detail
+  - CSS: modal, buttons, link styling
+
+  Author: Martin Haferanke
+  Date: 2025-07-10
+-->
+
+<div class="modal-header">
+  <h3>Author Details: {{ author.name }}</h3>
+  <button class="modal-close" aria-label="Close">&times;</button>
+</div>
+
+<div class="modal-body">
+  <!-- Author birth date, if available -->
+  <p>
+    <strong>Born:</strong>
+    {% if author.birth_date %}
+      {{ author.birth_date.strftime('%Y-%m-%d') }}
+    {% else %}
+      Unknown
+    {% endif %}
+  </p>
+
+  <!-- Author death date, if applicable -->
+  {% if author.date_of_death %}
+  <p>
+    <strong>Died:</strong>
+
+  {{ author.date_of_death.strftime('%Y-%m-%d') }}
+
+  </p>
+  {% endif %}
+
+  <!-- List of books associated with the author -->
+  {% if author.books %}
+    <h4>Books by {{ author.name }}:</h4>
+    <ul>
+      {% for book in author.books %}
+        <li>
+            {{ book.title }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p><em>No books found for this author.</em></p>
+  {% endif %}
+</div>
+
+<div class="modal-footer">
+  <!-- Delete form with confirmation -->
+  <form
+    method="POST"
+    action="{{ url_for('authors.delete_author', author_id=author.id) }}"
+    onsubmit="return confirm('Delete this author and all their books?');"
+  >
+    <button type="submit" class="btn btn-danger">
+      &#128465; Delete Author
+    </button>
+  </form>
+</div>
