@@ -1,0 +1,101 @@
+/* 19. RESPONSIVE DESIGN */
+@media (max-width: 1340px) {
+    .top-bar {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+/* Desktop: max 3 columns */
+@media (min-width: 1200px) {
+    .books-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 100%;
+    }
+}
+
+/* Tablet: max 2 columns */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .books-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile: 1 column */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .books-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .section-header h1 {
+        font-size: 2rem;
+    }
+
+    .nav-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .search-form {
+        flex-direction: column;
+    }
+
+    .navigation {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .book-cover {
+        width: 99%;
+    }
+
+    .book h3 {
+        font-size: 1.1rem;
+    }
+
+    .recommendations-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .recommendation-actions {
+        flex-direction: column;
+    }
+
+    .user-books-list {
+        flex-direction: column;
+    }
+}
+
+@media (min-width: 600px) {
+    .book-modal {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .book-info {
+        flex: 2;
+        padding-right: 1.5rem;
+        padding-bottom: 3rem;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+
+    .section-header h1 {
+        font-size: 1.8rem;
+    }
+}

@@ -17,7 +17,7 @@
 
   <label>Short description
     <textarea name="short_description">{{ book.short_description }}</textarea>
-  </label> <hr>
+  </label>
   <label>Rating
     <select name="rating">
       <option value="">–</option>
@@ -27,10 +27,7 @@
     </select>
   </label>
 
-  <label>
-    <input type="checkbox" name="is_read" {% if book.is_read %}checked{% endif %}>
-    Read
-  </label>
+
 
   <label>Reading Progress: <span id="progress-value">{{ book.progress }}</span> 
     <input type="range" name="progress" min="0" max="100"
@@ -38,8 +35,8 @@
   </label>
 
   <div class="nav-buttons">
-    <button type="submit" class="btn">Save</button>
-    <button type="button" class="btn btn-secondary" id="cancel-edit">Cancel</button>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-secondary" id="cancel-edit">Cancel</button>
   </div>
 </form>
 

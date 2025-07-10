@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommendations - My Book Library</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Main stylesheet loaded from static folder -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body data-message="{{ message or request.args.get('message') }}">
+    <div class="container">
+        <!-- Section header for AI recommendations -->
+        <div class="section-header">
+            <h1>🤖 AI Book Features</h1>
+            <p>
+                The AI will help enhance your reading experience based on the books you’ve read and your ratings.
+            </p>
+            <hr>
+        </div>
+
+        <!-- Display error if recommendation failed -->
+        {% if error %}
+        <div class="error-message">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Success message for added books -->
+        <div id="success-message" class="success-message hidden">
+            <span id="success-text"></span>
+        </div>
+
+        <div class="recommendations-section">
+            <!-- Spinner overlay while fetching recommendations -->
+            <div id="spinner" class="spinner-overlay hidden">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Form block to request AI suggestions -->
+            <div class="section-block" style="width: 50%">
+                <div class="section-header">
+                    <h2>📚 Get Recommendations</h2>
+                    <p class="section-description">
+                        Click below to generate 3 book recommendations tailored to your top-rated reads.
+                    </p>
+                </div>
+                <!-- Use url_for to target the generate_recommendations route -->
+                <form method="POST" action="{{ url_for('recommend.generate_recommendations') }}">
+                    <button type="submit" class="btn btn-primary">
+                        ✨ Get AI Recommendations
+                    </button>
+                </form>
+            </div>
+
+            <!-- Back link to main library view -->
+            <div class="section-block" style="width: 50%">
+                <div class="section-header">
+                    <h2>🔙 Back to Library</h2>
+                    <p class="section-description">
+                        Return to your main library to browse, search, or manage your books.
+                    </p>
+                </div>
+                <!-- Use url_for for home route -->
+                <a href="{{ url_for('home.home') }}" class="btn btn-secondary">
+                    ← Back to Library
+                </a>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Display recommendations if available -->
+        {% if recommendations %}
+        <div class="section">
+            <h2>📖 Recommended Books for You</h2>
+            <div class="books-grid">
+                {% for book in recommendations %}
+                <div class="book">
+                    {% if book.isbn %}
+                    <div class="book-cover">
+                        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                             alt="{{ book.title }} cover"
+                             onerror="this.src='https://via.placeholder.com/128x192?text=No+Cover'">
+                    </div>
+                    {% endif %}
+
+                    <div class="book-info">
+                        <h3>{{ book.title }}</h3>
+                        <p class="book-meta">by {{ book.author }}</p>
+                        {% if book.description %}
+                        <p class="book-description">{{ book.description }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="recommendation-actions">
+                        <!-- Button to add recommended book via AJAX -->
+                        <button class="btn btn-primary add-to-library"
+                                data-title="{{ book.title }}"
+                                data-author="{{ book.author }}"
+                                data-isbn="{{ book.isbn }}"
+                                data-description="{{ book.description or '' }}"
+                                data-year="{{ book.publication_year or '' }}"
+                                data-birth-date="{{ book.author_birth_date or '' }}"
+                                data-date-of-death="{{ book.author_date_of_death or '' }}">
+                            ➕ Add to My Library
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Summary of user books used for context -->
+        <div class="section">
+            <h3>📊 Based on Your Reading History</h3>
+            <div class="user-books-summary">
+                <p>
+                    These recommendations are based on {{ user_books|length }} of your top-rated books:
+                </p>
+                <div class="user-books-list">
+                    {% for book in user_books %}
+                    <span class="book-tag">
+                        {{ book.title }} {% if book.rating %}({{ book.rating }}/10){% endif %}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Main JavaScript loaded from static folder -->
+    <script type="module" src="{{ url_for('static', filename='main.js') }}"></script>
+<script>
+  function showSpinner() {
+    document.getElementById("spinner").style.display = "flex";
+  }
+
+  function hideSpinner() {
+    document.getElementById("spinner").style.display = "none";
+  }
+
+
+  document.querySelectorAll("form[method='POST']").forEach(form => {
+    form.addEventListener("submit", function () {
+      showSpinner();
+    });
+  });
+</script>
+
+
+<script>
+
+    document.querySelectorAll('.add-to-library').forEach(button => {
+        button.addEventListener('click', async function() {
+            const title = this.dataset.title;
+            const author = this.dataset.author;
+            const isbn = this.dataset.isbn;
+            const description = this.dataset.description;
+            const year = this.dataset.year;
+            const birthDate = this.dataset.birthDate;
+            const dateOfDeath = this.dataset.dateOfDeath;
+
+
+            this.disabled = true;
+            this.textContent = 'Adding...';
+
+            try {
+                const response = await fetch('/recommend/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        title: title,
+                        author: author,
+                        isbn: isbn,
+                        description: description,
+                        publication_year: year,
+                        birth_date: birthDate,
+                        date_of_death: dateOfDeath,
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    const successMessage = document.getElementById('success-message');
+                    const successText = document.getElementById('success-text');
+                    successText.textContent = result.message;
+                    successMessage.classList.remove('hidden');
+
+                    // Update button
+                    this.textContent = '✓ Added to Library';
+                    this.classList.remove('btn-primary');
+                    this.classList.add('btn-success');
+
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.classList.add('hidden');
+                    }, 5000);
+
+                } else {
+                    // Show error
+                    alert('Error: ' + result.error);
+                    this.disabled = false;
+                    this.textContent = '➕ Add to My Library';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding the book.');
+                this.disabled = false;
+                this.textContent = '➕ Add to My Library';
+            }
+        });
+    });
+</script>
+</body>
+</html>

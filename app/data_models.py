@@ -1,6 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date
-
 from sqlalchemy.orm import backref
 
 db = SQLAlchemy()
@@ -20,7 +18,7 @@ class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
-    birth_date = db.Column(db.Date, nullable=False)
+    birth_date = db.Column(db.Date, nullable=True)
     date_of_death = db.Column(db.Date, nullable=True)
 
     def __repr__(self):

@@ -1,0 +1,33 @@
+/* 16. LAYOUT HELPERS */
+.section-footer {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+.button-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+.icon-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 1.3rem;
+    padding: 50px 20px;
+}
+
+.icon-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+}

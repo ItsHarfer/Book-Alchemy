@@ -14,12 +14,7 @@
         <div><strong>Short description:</strong> {{ book.short_description }}</div>
 <br>
         <div><strong>Rating:</strong>  {{ book.rating }}/10</div>
-        <div><strong>Reading status:</strong>
-          <input type="checkbox"
-                 disabled
-                 {% if book.is_read %}checked{% endif %}
-          >
-        </div>
+
         <div class="reading-progress">
           <label for="progress-{{ book.id }}">Reading progress:</label>
           <progress id="progress-{{ book.id }}"
