@@ -1,3 +1,24 @@
+<!--
+  app / templates / recommend / show.html
+
+  Purpose:
+  Provides AI-powered book recommendations based on user reading history and ratings.
+  Allows users to generate suggestions, preview recommended titles, and add them directly
+  to their personal library.
+
+  Features:
+  - AI recommendation request via POST form
+  - Spinner overlay for loading feedback
+  - Success/error messaging
+  - Direct addition of recommended books using AJAX
+  - Fallback display of user reading context
+
+  Dependencies:
+  - Flask routes: recommend.generate_recommendations, recommend.add
+  - JavaScript: form submission handling, fetch API, UI updates
+  - CSS: main.css (modal, grid, buttons, spinner)
+
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>

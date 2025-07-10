@@ -1,3 +1,29 @@
+"""
+data / seed_data.py
+
+Purpose:
+This script initializes the database with predefined authors and books. It is intended to be run once
+to populate the database with initial data for development or testing purposes.
+
+Functions:
+- Drops all existing tables and recreates them.
+- Adds predefined authors to the database.
+- Adds books associated with these authors, each with metadata including ISBN, title, year, rating, and a short description.
+
+Features:
+- Uses SQLAlchemy for ORM-based database operations.
+- Defines clear relationships between authors and their books.
+- Provides a diverse set of books from two prominent fictional series.
+
+Required Modules:
+- datetime
+- run (for app instance)
+- app.models (for db, Author, Book)
+
+Author: Martin Haferanke
+Date: July 10, 2025
+"""
+
 from datetime import date
 from run import app
 from app.models import db, Author, Book
@@ -118,4 +144,4 @@ with app.app_context():
     db.session.add_all(books)
     db.session.commit()
 
-    print(" Books successfully added to the database.")
+    print("Books successfully added to the database.")

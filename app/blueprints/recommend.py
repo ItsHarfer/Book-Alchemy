@@ -1,14 +1,41 @@
 """
-Recommend Blueprint – AI-powered book recommendation endpoints
-Handles displaying the recommendation form, generating recommendations via AI,
-and adding AI-recommended books to the library.
+app / blueprints / recommend.py
+
+Provides endpoints for AI-powered book recommendations.
+Includes functionality to render the recommendation form, generate recommendations
+based on top-rated books, and allow users to add suggested books to their library.
+
+Features:
+- AI prompt generation based on highly rated user books
+- JSON-based interaction with AI model
+- Deduplication to avoid suggesting already owned books
+- Author creation and book insertion for selected recommendations
+
+Dependencies:
+- Flask (Blueprint, render_template, request, jsonify)
+- SQLAlchemy ORM (db, Book)
+- Utility functions: commit_session, get_or_create_author
+- AI services: prepare_books_data, fetch_ai_recommendation
+
+Raises:
+- ValueError: for invalid or missing input fields (dates, required form data)
+- JSONDecodeError: for invalid JSON returned by AI service
+- SQLAlchemyError: on database insert/commit errors
+- Exception: for generic runtime failures
+
+Author: Martin Haferanke
+Date: 2025-07-10
 """
 
 import json
 import logging
 from datetime import datetime
+
 from flask import Blueprint, render_template, request, jsonify
 from sqlalchemy import desc
+from sqlalchemy.exc import SQLAlchemyError
+
+from ..extentions import limiter
 
 from app.models import db, Book
 from ..utils import commit_session, get_or_create_author
@@ -24,19 +51,19 @@ def show_recommend_form():
     """
     Render the recommendation request form.
 
-    :return: Rendered recommend.html template.
+    :return: Rendered recommend.html template
     """
     return render_template("recommend.html")
 
 
 @recommend_bp.route("/", methods=["POST"])
+@limiter.limit("3/minute")
 def generate_recommendations():
     """
     Generate 3 book recommendations using AI based on top-rated books.
 
-    :form: none
-    :return: Rendered recommend.html with recommendations or error.
-    :raises Exception: if AI service fails or no top-rated books.
+    :return: Rendered recommend.html with recommendations or error
+    :raises Exception: if AI service fails or no top-rated books
     """
     top_books = Book.query.filter(Book.rating >= 8).order_by(desc(Book.rating)).all()
     if not top_books:
@@ -45,18 +72,13 @@ def generate_recommendations():
         )
 
     try:
-        # Prepare data for AI prompt
         data = prepare_books_data(top_books)
-
-        # Gather existing titles to exclude
         existing_titles = [b.title for b in Book.query.all()]
 
-        # Build explicit prompt with exclusion instructions and JSON schema
         prompt = f"""
         Based on these top-rated books, recommend exactly 3 similar titles.
         Exclude any books already in the library: {existing_titles}
-        
-        
+
         Return your answer as valid JSON with one top-level key:
 
         {{
@@ -64,13 +86,13 @@ def generate_recommendations():
             {{
               "title": "<string>",
               "author": "<string>",
-              "author_birth_date": "YYYY-MM-DD",         # empty string if unknown
-              "author_date_of_death": "YYYY-MM-DD",      # empty string if still alive or unknown
+              "author_birth_date": "YYYY-MM-DD",
+              "author_date_of_death": "YYYY-MM-DD",
               "description": "<string, max 2 short sentences>",
               "isbn": "<string>",
               "publication_year": <integer>
             }},
-            {{ ... }}, 
+            {{ ... }},
             {{ ... }}
           ]
         }}
@@ -85,9 +107,8 @@ def generate_recommendations():
         - Descriptions are brief (max. 2 sentences).
         - Try to vary in your book selection to get different recommendations.
         """
-        # Call AI service
+
         result = fetch_ai_recommendation(prompt)
-        # Normalize response to list of recommendations
         if isinstance(result, dict):
             recs = result.get("recommendations", [])
         elif isinstance(result, list):
@@ -96,13 +117,11 @@ def generate_recommendations():
             logger.error("Unexpected AI response format: %r", result)
             recs = []
 
-        # Filter out already-owned books
         existing = {(b.title, b.author.name) for b in Book.query.all()}
         filtered = [
             r for r in recs if (r.get("title"), r.get("author")) not in existing
         ]
 
-        # If no new suggestions, notify user
         message = None
         if not filtered:
             message = (
@@ -125,19 +144,21 @@ def add_recommended_book():
     """
     Add a selected AI-recommended book to the library.
 
-    :form title: Title of the recommended book (required).
-    :form author: Author name (required).
-    :form birth_date: YYYY-MM-DD (optional).
-    :form date_of_death: YYYY-MM-DD (optional).
-    :form isbn: ISBN (optional).
-    :form description: Short description (optional).
-    :form publication_year: Year published (optional).
-    :return: JSON with success status and message or error.
-    :raises ValueError: if required fields are missing.
-    :raises Exception: if database commit fails.
+    :form title: Title of the recommended book (required)
+    :form author: Author name (required)
+    :form birth_date: YYYY-MM-DD (optional)
+    :form date_of_death: YYYY-MM-DD (optional)
+    :form isbn: ISBN (optional)
+    :form description: Short description (optional)
+    :form publication_year: Year published (optional)
+    :return: JSON with success status and message or error
+    :raises ValueError: if required fields are missing
+    :raises SQLAlchemyError: if database commit fails
+    :raises Exception: for unexpected errors
     """
     title = request.form.get("title")
     author_name = request.form.get("author")
+
     if not title or not author_name:
         return jsonify({"success": False, "error": "Title and author are required."})
 
@@ -177,6 +198,6 @@ def add_recommended_book():
         return jsonify(
             {"success": True, "message": f"'{title}' by {author_name} has been added!"}
         )
-    except Exception as e:
+    except (ValueError, SQLAlchemyError):
         logger.exception("Failed to add recommended book")
         return jsonify({"success": False, "error": "An unexpected error occurred."})

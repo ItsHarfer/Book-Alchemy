@@ -1,4 +1,21 @@
-<!-- app/templates/partials/add_author_modal.html -->
+<!--
+  app / templates / partials / add / author.html
+
+  Purpose:
+  Modal dialog for submitting new author data via form.
+  This modal includes fields for name, birth date (required), and optional date of death.
+
+  Features:
+  - HTML5 validation via 'required' attributes
+  - Frontend validation support via JS event listeners
+  - Conditional error message rendering via Jinja2 block
+  - Submit button is disabled by default and activated via JS form checks
+
+  Dependencies:
+  - JavaScript logic to dynamically enable/disable the submit button
+  - CSS classes: form-control, modal-close, alert, btn
+  - Flask route 'authors.add_author' for form action
+-->
 
 <form id="add-author-form"
       method="POST"
@@ -6,10 +23,11 @@
       novalidate>
   <div class="modal-header">
     <h3>🙋 Add New Author</h3>
-    <button type="button" class="modal-close" aria-label="Close">×</button>
+    <button type="button" class="modal-close" aria-label="Close">&times;</button>
   </div>
 
   <div class="modal-body">
+    <!-- Author full name (required) -->
     <div class="form-group">
       <label for="author-name">Name<span class="required">*</span></label>
       <input id="author-name"
@@ -20,6 +38,7 @@
              required>
     </div>
 
+    <!-- Author birth date (required) -->
     <div class="form-group">
       <label for="author-birth-date">Birth Date<span class="required">*</span></label>
       <input id="author-birth-date"
@@ -29,6 +48,7 @@
              required>
     </div>
 
+    <!-- Optional field: author death date -->
     <div class="form-group">
       <label for="author-death-date">Date of Death</label>
       <input id="author-death-date"
@@ -37,6 +57,7 @@
              class="form-control">
     </div>
 
+    <!-- Server-side error message (conditionally rendered) -->
     {% if message %}
     <div class="alert alert-danger">{{ message }}</div>
     {% endif %}
@@ -44,7 +65,7 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary modal-close"></button>
-    <!-- disabled by default -->
+    <!-- Submit disabled by default until valid input is detected -->
     <button id="add-author-submit"
             type="submit"
             class="btn btn-primary"

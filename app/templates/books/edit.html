@@ -1,0 +1,65 @@
+<!--FALLBACK-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Book</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+
+  <form id="edit-book-form" class="book-modal">
+    <h2>Edit book</h2>
+
+    <label>Title
+      <input type="text" name="title" value="{{ book.title }}" required>
+    </label>
+
+    <label>Author
+      <select name="author_id">
+        {% for a in authors %}
+          <option value="{{ a.id }}" {% if a.id==book.author_id %}selected{% endif %}>
+            {{ a.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>Short description
+      <textarea name="short_description">{{ book.short_description }}</textarea>
+    </label>
+
+    <label>Rating
+      <select name="rating">
+        <option value="">–</option>
+        {% for i in range(1,11) %}
+          <option value="{{ i }}" {% if book.rating==i %}selected{% endif %}>{{ i }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>Reading Progress: <span id="progress-value">{{ book.progress }}</span> 
+      <input type="range" name="progress" min="0" max="100"
+             value="{{ book.progress }}" id="progress-slider">
+    </label>
+
+    <div class="nav-buttons">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <button type="submit" class="btn btn-secondary" id="cancel-edit">Cancel</button>
+    </div>
+  </form>
+
+  <script>
+    // Live-Update of the progress bar
+    const slider = document.getElementById("progress-slider");
+    const value = document.getElementById("progress-value");
+    if (slider && value) {
+      slider.addEventListener("input", e => {
+        value.textContent = e.target.value;
+      });
+    }
+  </script>
+
+</body>
+</html>

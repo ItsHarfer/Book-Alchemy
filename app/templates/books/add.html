@@ -1,20 +1,16 @@
+<!-- FALLBACK -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Add Book – My Book Library</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
-    rel="stylesheet">
-  <link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='main.css') }}">
+  <title>Add a Book</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
+
   <div class="book-container">
     <div class="section-header">
-      <h1>📚 Add a Book</h1>
+      <h1>&#128218; Add a Book</h1>
       <p>Add a new book to your library collection.</p>
     </div>
 
@@ -25,15 +21,10 @@
 
       {% if not authors %}
       <div class="warning">
-        ⚠️ No authors available! Please add an author first before adding books.
+        &#9888; No authors available! Please add an author first before adding books.
       </div>
       {% else %}
-      <!--
-        Use url_for to target the books blueprint’s add_book route (/books/add)
-      -->
-      <form
-        action="{{ url_for('books.add_book') }}"
-        method="POST">
+      <form action="{{ url_for('books.add_book') }}" method="POST">
         <div class="form-group">
           <label for="isbn">ISBN</label>
           <input
@@ -85,9 +76,7 @@
             id="author_id"
             name="author_id"
             required>
-            <option value="" disabled selected>
-              Select an author…
-            </option>
+            <option value="" disabled selected>Select an author…</option>
             {% for author in authors %}
             <option value="{{ author.id }}">{{ author.name }}</option>
             {% endfor %}
@@ -95,21 +84,14 @@
         </div>
 
         <div class="button-footer">
-          <button
-            type="submit"
-            class="btn btn-full btn-primary">
-            📗 Add Book
+          <button type="submit" class="btn btn-full btn-primary">
+            &#128214; Add Book
           </button>
         </div>
       </form>
 
-      <!--
-        Fallback link for users without JS: back to the main library
-      -->
-      <a
-        href="{{ url_for('home.home') }}"
-        class="btn btn-secondary">
-        ← Back to Library
+      <a href="{{ url_for('home.home') }}" class="btn btn-secondary">
+        &larr; Back to Library
       </a>
       {% endif %}
     </div>
@@ -120,5 +102,6 @@
     </div>
     {% endif %}
   </div>
+
 </body>
 </html>

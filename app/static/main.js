@@ -24,6 +24,20 @@ const modalBody = document.getElementById("modal-body");
 const modalClose = editModal.querySelector(".modal-close");
 const modalOverlay = editModal.querySelector(".modal-overlay");
 
+
+/**
+ * Handles an error by logging the error to the console and displaying a user-friendly message.
+ *
+ * @param {Error|string} err - The error object or error message to be logged.
+ * @param {string} [userMsg='An unexpected error occurred.'] - The message to be shown to the user as a toast notification.
+ * @return {void} This method does not return a value.
+ */
+function handleError(err, userMsg = 'An unexpected error occurred.') {
+  console.error(err);
+  showToast(userMsg);
+}
+
+
 /**
  * Opens a modal by fetching and loading content from a specified URL.
  *
@@ -31,117 +45,114 @@ const modalOverlay = editModal.querySelector(".modal-overlay");
  * @return {Promise<void>} A promise that resolves when the modal is successfully displayed or logs an error if the fetch fails.
  */
 async function openModal(url) {
-    try {
-        const resp = await fetch(url);
-        const html = await resp.text();
-        modalBody.innerHTML = html;
+  try {
+    const resp = await fetch(url);
+    const html = await resp.text();
+    modalBody.innerHTML = html;
 
-        // Re-bind close buttons
-        editModal.querySelectorAll('.modal-close').forEach(btn =>
-            btn.addEventListener('click', closeModal)
-        );
+    // Rebind close buttons for dynamically loaded content
+    editModal.querySelectorAll('.modal-close').forEach(btn =>
+      btn.addEventListener('click', closeModal)
+    );
 
-        // Book form validation
-        const bookForm = modalBody.querySelector('#add-book-form');
-        if (bookForm) {
-          const submitBtn    = bookForm.querySelector('#add-book-submit');
-          const isbnInput    = bookForm.querySelector('#book-isbn');
-          const titleInput   = bookForm.querySelector('#book-title');
-          const descInput    = bookForm.querySelector('#book-description');
-          const descCount    = bookForm.querySelector('#desc-count');
-          const yearInput    = bookForm.querySelector('#book-year');
-          const authorInput  = bookForm.querySelector('#book-author');
-          const isbnFeedback = bookForm.querySelector('#isbn-feedback');
-          const yearFeedback = bookForm.querySelector('#year-feedback');
+    // Setup book form validation if present
+    const bookForm = modalBody.querySelector('#add-book-form');
+    if (bookForm) {
+      const submitBtn    = bookForm.querySelector('#add-book-submit');
+      const isbnInput    = bookForm.querySelector('#book-isbn');
+      const titleInput   = bookForm.querySelector('#book-title');
+      const descInput    = bookForm.querySelector('#book-description');
+      const descCount    = bookForm.querySelector('#desc-count');
+      const yearInput    = bookForm.querySelector('#book-year');
+      const authorInput  = bookForm.querySelector('#book-author');
+      const isbnFeedback = bookForm.querySelector('#isbn-feedback');
+      const yearFeedback = bookForm.querySelector('#year-feedback');
 
-          const isbnRegex = /^(?:\d{10}|\d{13})$/;
+      // For ISBN-10 and ISBN-13 format validation
+      const isbnRegex = /^(?:\d{10}|\d{13})$/;
 
-          // Core validator for enabling/disabling submit
-          function validateBook() {
-            const hasTitle   = titleInput.value.trim().length > 0;
-            const hasYear    = yearInput.value.trim().length > 0 && +yearInput.value <= 2030;
-            const hasAuthor  = authorInput.value.trim().length > 0;
-            const descOk     = descInput.value.length <= 250;
-            const isbnVal    = isbnInput.value.trim();
-            const isbnOk     = isbnVal === '' || isbnRegex.test(isbnVal);
-            submitBtn.disabled = !(hasTitle && hasYear && hasAuthor && descOk && isbnOk);
-          }
+      // Validates the form fields and enables/disables the submit button
+      function validateBook() {
+        const hasTitle   = titleInput.value.trim().length > 0;
+        const hasYear    = yearInput.value.trim().length > 0 && +yearInput.value <= 2030;
+        const hasAuthor  = authorInput.value.trim().length > 0;
+        const descOk     = descInput.value.length <= 250;
+        const isbnVal    = isbnInput.value.trim();
+        const isbnOk     = isbnVal === '' || isbnRegex.test(isbnVal);
+        submitBtn.disabled = !(hasTitle && hasYear && hasAuthor && descOk && isbnOk);
+      }
 
-          // ISBN inline feedback
-          isbnInput.addEventListener('input', () => {
-            const val = isbnInput.value.trim();
-            if (val === '' || isbnRegex.test(val)) {
-              isbnInput.classList.remove('is-invalid');
-              isbnInput.classList.add('is-valid');
-              isbnFeedback.textContent = '';
-            } else {
-              isbnInput.classList.add('is-invalid');
-              isbnInput.classList.remove('is-valid');
-              isbnFeedback.textContent = 'ISBN must be exactly 10 or 13 digits';
-            }
-            validateBook();
-          });
-
-          // Year inline feedback
-          yearInput.addEventListener('input', () => {
-            const val = +yearInput.value;
-            if (yearInput.value.trim() && val <= 2030) {
-              yearInput.classList.remove('is-invalid');
-              yearInput.classList.add('is-valid');
-              yearFeedback.textContent = '';
-            } else {
-              yearInput.classList.add('is-invalid');
-              yearInput.classList.remove('is-valid');
-              yearFeedback.textContent = 'Year must be 2030 or earlier';
-            }
-            validateBook();
-          });
-
-          // Description counter + enforce max
-          descInput.addEventListener('input', e => {
-            if (e.target.value.length > 250) {
-              e.target.value = e.target.value.slice(0, 250);
-            }
-            descCount.textContent = `${e.target.value.length}/250`;
-            validateBook();
-          });
-
-          // Re-validate on title/author change
-          [titleInput, authorInput].forEach(el =>
-            el.addEventListener('input', validateBook)
-          );
-
-          // Initial run
-          validateBook();
+      // Live ISBN validation with inline feedback
+      isbnInput.addEventListener('input', () => {
+        const val = isbnInput.value.trim();
+        if (val === '' || isbnRegex.test(val)) {
+          isbnInput.classList.remove('is-invalid');
+          isbnInput.classList.add('is-valid');
+          isbnFeedback.textContent = '';
+        } else {
+          isbnInput.classList.add('is-invalid');
+          isbnInput.classList.remove('is-valid');
+          isbnFeedback.textContent = 'ISBN must be exactly 10 or 13 digits';
         }
+        validateBook();
+      });
 
-        // Hook up the Add-Author form validation
-        const form = modalBody.querySelector('#add-author-form');
-        if (form) {
-            const submitBtn = form.querySelector('#add-author-submit');
-            const nameInput = form.querySelector('#author-name');
-            const birthInput = form.querySelector('#author-birth-date');
-
-            const validate = () => {
-                const nameOk = nameInput.value.trim().length > 0;
-                const birthOk = birthInput.value.trim().length > 0;
-                submitBtn.disabled = !(nameOk && birthOk);
-            };
-
-            // Initial check (in case fields were pre-filled)
-            validate();
-
-            // Re-run on every change
-            nameInput.addEventListener('input', validate);
-            birthInput.addEventListener('input', validate);
+      // Live year validation with feedback
+      yearInput.addEventListener('input', () => {
+        const val = +yearInput.value;
+        if (yearInput.value.trim() && val <= 2030) {
+          yearInput.classList.remove('is-invalid');
+          yearInput.classList.add('is-valid');
+          yearFeedback.textContent = '';
+        } else {
+          yearInput.classList.add('is-invalid');
+          yearInput.classList.remove('is-valid');
+          yearFeedback.textContent = 'Year must be 2030 or earlier';
         }
+        validateBook();
+      });
 
-        editModal.classList.remove("hidden");
-        document.body.classList.add("modal-open");
-    } catch (err) {
-        console.error(`Error loading modal from ${url}:`, err);
-        showToast("Failed to load content.");
+      // Live description character count with truncation at 250
+      descInput.addEventListener('input', e => {
+        if (e.target.value.length > 250) {
+          e.target.value = e.target.value.slice(0, 250);
+        }
+        descCount.textContent = `${e.target.value.length}/250`;
+        validateBook();
+      });
+
+      // Validate on title and author changes
+      [titleInput, authorInput].forEach(el =>
+        el.addEventListener('input', validateBook)
+      );
+
+      validateBook(); // Initial validation
     }
+
+    // Setup author form validation if present
+    const form = modalBody.querySelector('#add-author-form');
+    if (form) {
+      const submitBtn = form.querySelector('#add-author-submit');
+      const nameInput = form.querySelector('#author-name');
+      const birthInput = form.querySelector('#author-birth-date');
+
+      const validate = () => {
+        const nameOk = nameInput.value.trim().length > 0;
+        const birthOk = birthInput.value.trim().length > 0;
+        submitBtn.disabled = !(nameOk && birthOk);
+      };
+
+      validate(); // Initial check
+      nameInput.addEventListener('input', validate);
+      birthInput.addEventListener('input', validate);
+    }
+
+    // Show the modal
+    editModal.classList.remove("hidden");
+    document.body.classList.add("modal-open");
+  } catch (err) {
+    handleError(err, "Failed to load content.");
+  }
 }
 
 /**
@@ -151,9 +162,9 @@ async function openModal(url) {
  * @return {void} This function does not return a value.
  */
 function closeModal() {
-    editModal.classList.add("hidden");
-    document.body.classList.remove("modal-open");
-    modalBody.innerHTML = "";
+  editModal.classList.add("hidden");
+  document.body.classList.remove("modal-open");
+  modalBody.innerHTML = "";
 }
 
 /**
@@ -162,11 +173,11 @@ function closeModal() {
  * @param {number} [duration=3000] - Duration in ms before hiding.
  */
 function showToast(msg, duration = 3000) {
-    if (!msg) return;
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), duration);
+  if (!msg) return;
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), duration);
 }
 
 /**
