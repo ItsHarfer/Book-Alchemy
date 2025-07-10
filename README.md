@@ -79,7 +79,7 @@ FLASK_CONFIG=development
 ```
 
 **Note:** For the AI-powered recommendation feature, you need your own OpenAI account and API key. You can register at [https://platform.openai.com/](https://platform.openai.com/) 
-and retrieve your API key to use in the `.env` file.
+and retrieve your API key to use in the `.env` file. The Secret Key (Optional) in this case is for SQL password protected cases when you want to use the system in production.
 
 ### 3. Install Requirements
 
