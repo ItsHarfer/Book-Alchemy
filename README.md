@@ -81,6 +81,15 @@ FLASK_CONFIG=development
 **Note:** For the AI-powered recommendation feature, you need your own OpenAI account and API key. You can register at [https://platform.openai.com/](https://platform.openai.com/) 
 and retrieve your API key to use in the `.env` file. The Secret Key (Optional) in this case is for SQL password protected cases when you want to use the system in production.
 
+### For self-hosting on a custom server (Codio, Docker, etc.):
+Add these additional variables to `.env` (not needed locally):
+```
+FLASK_CONFIG=production
+FLASK_RUN_HOST=0.0.0.0
+FLASK_RUN_PORT=5002
+```
+
+
 ### 3. Install Requirements
 
 - Python 3.11 or higher
