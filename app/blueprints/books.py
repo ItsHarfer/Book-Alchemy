@@ -27,6 +27,8 @@ Date: 2025-07-10
 """
 
 import logging
+from datetime import datetime
+
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from app.models import db, Book, Author
 from ..utils import commit_session
@@ -42,47 +44,66 @@ def add_book():
     """
     Add a new book via form submission.
 
-    :form isbn: ISBN string (optional)
-    :form title: Book title (required)
-    :form short_description: Brief description (optional)
-    :form publication_year: Year published (optional, defaults to current year)
-    :form author_id: Existing author ID (required)
-    :return: Rendered template or redirect
-    :raises ValueError: if required form data is missing or invalid
-    :raises SQLAlchemyError: if database commit fails
+    Form fields:
+    - isbn (optional)
+    - title (required)
+    - short_description (optional)
+    - publication_year (required, integer between 0 and current year)
+    - author_id (required)
+
+    :return: on GET, renders the add-book form (or modal partial);
+             on successful POST, redirects to home with a success message;
+             on validation error, re-renders form with an error message.
+    :raises ValueError: if title, author_id or publication_year is missing or invalid
+    :raises SQLAlchemyError: if committing the new book to the database fails
     """
     message = None
     authors = Author.query.order_by(Author.name).all()
 
     if request.method == "POST":
-        isbn = request.form.get("isbn", "")
-        title = request.form.get("title")
-        desc_text = request.form.get("short_description", "")
-        year = request.form.get(
-            "publication_year", db.func.strftime("%Y", db.func.date("now"))
-        )
-        author_id = request.form.get("author_id")
+        # Retrieve form data
+        isbn = request.form.get("isbn", "").strip()
+        title = request.form.get("title", "").strip()
+        desc_text = request.form.get("short_description", "").strip()
+        year_str = request.form.get("publication_year", "").strip()
+        author_id = request.form.get("author_id", "").strip()
 
-        if not title or not author_id:
-            message = "Title and author are required."
+        # Validate required fields
+        if not title or not author_id or not year_str:
+            message = "Title, author, and publication year are required."
         else:
             try:
+                # Parse and validate publication year
+                year = int(year_str)
+                current_year = datetime.now().year
+                if year < 0 or year > current_year:
+                    raise ValueError(
+                        f"Publication year must be between 0 and {current_year}."
+                    )
+
+                # Create and persist the new Book
                 book = Book(
                     isbn=isbn,
                     title=title,
                     short_description=desc_text,
-                    publication_year=int(year),
+                    publication_year=year,
                     author_id=int(author_id),
                 )
                 db.session.add(book)
                 commit_session()
-                # Replace emoji with ASCII equivalent
+
+                # Redirect with a success message
                 msg = f"+ '{book.title}' added to your library!"
                 return redirect(url_for("home.home", message=msg))
-            except (ValueError, SQLAlchemyError) as e:
+
+            except ValueError as ve:
+                # Handle invalid year parse or range
+                message = f"Invalid publication year: {ve}"
+            except SQLAlchemyError:
                 logger.exception("Failed to add book")
                 raise
 
+    # If a modal flag is set, render the partial template
     if request.args.get("modal") == "true":
         return render_template(
             "partials/add/book.html", authors=authors, message=message
