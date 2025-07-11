@@ -8,11 +8,9 @@ A Flask-based web application for managing authors and books, designed for small
 
 ## ✨ Features
 
-- 📚 Author and book management with full CRUD support  
+- 📚 Author and book management with full CRUD operations
 - 🤖 AI-powered book recommendation 
-- 🧾 Short descriptions, reading progress, and rating tracking  
-- 🔐 Environment-based configuration with secure secret handling  
-- 🧪 Modular codebase with unit-testable components  
+- 🧾 Personalized reading experience with reading-progress and rating tracking
 
 ---
 ## Preview
